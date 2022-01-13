@@ -8,5 +8,6 @@ int main()
     bool a = true;
     std::string b;
     std::cout << "a : " << a << " b : " << b << std::endl;
+
     return 0;
 }

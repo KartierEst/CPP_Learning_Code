@@ -4,8 +4,14 @@
 ## Exercice 1 - Compilation et exécution
 
 1. Quels sont les avantages et désavantages d'un langage dit "*compilé*" (C, C++, Pascal) ou "*semi-compilé*" (Java) comparé à un langage dit "*interpreté*" (Python, PHP, Javascript, etc) ?
+
+Les avantages sont qu'on peut une fois le programme compilé, directement être exécuté par le système d’exploitation. L'éxécution sera plus rapide puisqu'on a pas besoin de passer par un interpéteur. Le seul soucis c'est que l'éxécutable ne sera pas portable.
 2. Quelle est la différence entre une erreur de compilation et une erreur d'exécution ? (à quel moment se produisent-elles ? dans quelles circonstances ? comment les identifier ? comment les corriger ? ...)
+
+L'erreur n'est pas donné au meme moment, quand on compile on aura une erreur de compilation et quand on exécute ca sera une erreur d'éxécution. Quand on aura une erreur de syntaxe par exemple ca sera une erreur de compilation. On le corrige avec les différentes consignes qu'il y a dans le terminal pour les régler. 
 3. Que signifie en pratique l'expression "*undefined behavior*" (UB) ? Peut-on compiler un programme contenant du code classifié UB par le standard ? Si oui, que peut-il se produire au moment de son exécution ?
+
+UB represente tout ce qui n'est pas supporté, on ne peut pas le compiler. 
 
 
 ## Exercice 2 - Primitives et initialisation
@@ -25,35 +31,36 @@ Mêmes questions en ajoutant l'option `-Werror` à la compilation.\
 Vous pouvez utiliser [CompilerExplorer](https://www.godbolt.org/z/rPPoro) pour tester la compilation de petits snippets de code.
 
 ```cpp
-short       s0;
-const short s1;
+short       s0; // aucune erreur
+const short s1; // il faut initialiser une constante
 
-const int i1 = 2;
+const int i1 = 2; // aucune erreur
 
-bool b2{false};
-bool b3{i1};
-bool b4;
+bool b2{false}; // aucune erreur
+bool b3{i1}; // i1 est un int impossible
+bool b4; // aucune erreur
 
-unsigned       u5{0x10};
-unsigned short us6 = -10;
-unsigned long  ul7{b3 + u5 + us6};
+unsigned       u5{0x10}; // aucune erreur
+unsigned short us6 = -10; // aucune erreur
+unsigned long  ul7{b3 + u5 + us6}; // aucune erreur
 
-char c8{"a"};
-char c9 = -10;
+char c8{"a"}; // "" n'est pas un char -> char c'est ''
+char c9 = -10; // un char est un nombre de base
 
-double       d10{i1};
-double&      d11{d10};
-double&      d12;
-const double d13{.0f};
+double       d10{i1}; // un int est un double
+double&      d11{d10}; // pas de probleme
+double&      d12; // erreur parce que référence non défini
+const double d13{.0f}; // aucun
 
 int        i14 = i1;
-int&       i15 = i1;
-int&       i16 = b2;
+int&       i15 = i1; // i1 constante
+int&       i16 = b2; // b2 bool
 const int& i17{i14};
 ```
 
 2. Pouvez-vous donner la valeur de `s0` ? De `ul7` ?
 
+s0 = 0 ( la valeur initialisé ), ul7 = 65543
 
 ## Exercice 3 - Les fonctions et leurs paramètres
 
@@ -89,6 +96,7 @@ int main() {
 Quelles sont les différences entre ces différentes méthodes de passage ?
 Dans quels contextes est-il préférable de passer par valeur ? Par référence ? Et par référence constante ?
 
+Par références va modifier la valeur du parametres au cours de l'éxécution de la fonction, le const va faire en sorte que la valeur en parametre ne soit pas modifier dans la fonction . Si on utilise le const c'est juste pour que le paramètre ne soit pas modifier dans la fonction.
 3. Modifiez les signatures des fonctions suivantes de manière à ce que le passage de paramètres soit le plus efficace et sécurisé possible.
 Vous pouvez vous aidez des commentaires pour comprendre comment les fonctions utilisent leurs paramètres.
 ```cpp
@@ -113,6 +121,31 @@ bool are_all_positives(std::vector<int> values, int negative_indices_out[], size
 // The input parameters are not modified by the function.
 std::string concatenate(char str1[], char str2[]);
 ```
+
+Correction
+```cpp
+// Return the number of occurrences of 'a' found in string 's'.
+int count_a_occurrences(const std::string s);
+
+// Update function of a rendering program.
+// - dt (delta time) is read by the function to know the time elapsed since the last frame.
+// - errors is a string filled by the function to indicate what errors have occured.
+void update_loop(const float& dt, std::string& errors_out);
+
+// Return whether all numbers in 'values' are positive.
+// If there are negative values in it, fill the array 'negative_indices_out' with the indices
+// of these values and set its size in 'negative_count_out'.
+// ex: auto res = are_all_positive({ 1, -2, 3, -4 }, negative_indices, negative_count);
+//    -> res is false, since not all values are positive
+//    -> negative_indices contains { 1, 3 } because values[1] = -2 and values[3] = -4
+//    -> negative_count is 2
+bool are_all_positives(std::vector<int>& values, int& negative_indices_out[], size_t& negative_count_out);
+
+// Concatenate 'str1' and 'str2' and return the result.
+// The input parameters are not modified by the function.
+std::string concatenate(const char str1[],const char str2[]);
+```
+
 
 
 ## Exercice 4 - `std::string` et `std::vector`
