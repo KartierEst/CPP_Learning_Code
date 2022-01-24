@@ -6,40 +6,39 @@
 
 using namespace std;
 
-bool parse_params(int argc, char* argv[], string& dict_path, string& word, string& translation,
-                                          vector<string>& sentence);
-vector<pair<string, string>> open_dictionary(const string& path);
-void                         save_dictionary(const string& path, const vector<pair<string, string>>& dict);
-void                         translate(const vector<string>& sentence, const vector<pair<string, string>>& dict);
+bool parse_params(int argc, char** argv, string& dict_path, string& word, string& translation,
+                  vector<string>& sentence);
+vector<pair<string, string>> open_dictionary(char* path);
+void                         save_dictionary(char* path, vector<pair<string, string>> dict);
+void                         translate(vector<string>& sentence, vector<pair<string, string>> dict);
 
-int main(int argc, char* argv[])
+int main(int argc, char** argv)
 {
-    string         dict_path, word, translation;
-    vector<string> sentence;
+    const char *dict_path, word, translation, sentence;
 
-    if (!parse_params(argc, argv, dict_path, word, translation, sentence))
+    if (!parse_params(argc, argv, dict_path, translation, sentence))
     {
         return -1;
     }
 
     vector<pair<string, string>> dict;
 
-    if (!dict_path.empty())
+    if (dict_path)
     {
         dict = open_dictionary(dict_path);
     }
 
-    if (!word.empty() && !translation.empty())
+    if (word && translation)
     {
         dict.emplace_back(word, translation);
 
-        if (!dict_path.empty())
+        if (dict_path)
         {
             save_dictionary(dict_path, dict);
         }
     }
 
-    if (!sentence.empty())
+    if (sentence)
     {
         translate(sentence, dict);
     }
@@ -47,12 +46,12 @@ int main(int argc, char* argv[])
     return 0;
 }
 
-bool parse_params(int argc, char* argv[], string& dict_path, string& word, string& translation,
-                  vector<string>& sentence)
+bool parse_params(int argc, char** argv, string& dict_path, string& word, string& translation,
+                  vector<string> sentence)
 {
     for (auto i = 1; i < argc; ++i)
     {
-        const string option = argv[i];
+        std::string option = argv[i];
 
         if (option == "-d" && (i + 1) < argc)
         {
@@ -78,13 +77,14 @@ bool parse_params(int argc, char* argv[], string& dict_path, string& word, strin
     return true;
 }
 
-vector<pair<string, string>> open_dictionary(const string& path)
+vector<pair<string, string>> open_dictionary(char* path)
 {
     vector<pair<string, string>> dict;
 
     fstream file { path, ios_base::in };
 
-    while (!file.eof())
+    int i = 0;
+    while (file.eof())
     {
         string word;
         file >> word;
@@ -92,40 +92,37 @@ vector<pair<string, string>> open_dictionary(const string& path)
         string translation;
         file >> translation;
 
-        dict.emplace_back(pair { word, translation });
+        dict[++i] = pair { word, translation };
     }
 
     return dict;
 }
 
-void save_dictionary(const string& path, const vector<pair<string, string>>& dict)
+void save_dictionary(char* path, vector<pair<string, string>> dict)
 {
-    fstream file { path, ios_base::app | ios_base::out };
+    fstream file { path, ios_base::out };
 
-    for (const auto& word_translation : dict)
+    for (auto word_translation : dict)
     {
-        file << word_translation.first << " " << word_translation.second << endl;
+        file << word_translation.first << " " << word_translation.second << std::endl;
     }
 }
 
-void translate(const vector<string>& sentence, const vector<pair<string, string>>& dict)
+void translate(vector<string>& sentence, vector<pair<string, string>> dict)
 {
-    for (const auto& word : sentence)
+    for (auto word : sentence)
     {
-        bool found = false;
-        for (const auto& word_translation : dict)
+        for (auto word_translation : dict)
         {
             if (word == word_translation.first)
             {
                 cout << word_translation.second << " ";
-                found = true;
-                break;
+            }
+            else
+            {
+                cout << "???"
+                     << " ";
             }
         }
-        if (!found)
-        {
-            cout << "??? ";
-        }
     }
-    cout << endl;
 }
