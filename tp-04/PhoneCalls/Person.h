@@ -11,6 +11,7 @@ public:
         : _name { name }
         , _position { position }
     {}
+    Person() {}
 
     void answer_phone() const { std::cout << "Hi! " << _name << " on the phone!" << std::endl; }
 
@@ -18,7 +19,8 @@ public:
 
     void set_position(int position) { _position = position; }
 
-private:
     const std::string _name;
+
+private:
     int               _position = 0;
 };

@@ -1,0 +1,18 @@
+1. Quelle est la complexité d’insertion dans une std::map ?
+complexité logarithmique
+
+2. Quelles différences y a-t-il entre les fonctions push_back() et emplace_back() de la classe std::vector ?
+En comparant les signatures de push_back et emplace_back, on se rend compte qu’il faut fournir directement
+à push_back l’élément à insérer (un seul élément de type T), alors qu’on peut fournir à emplace_back les paramètres permettant de construire le nouvel élément.
+
+3. Quelle fonction permet de savoir si un conteneur est vide ?
+empty() qui renvoit true si le conteneur est vide.
+
+4. Quelle est la différence entre std::vector::size() et std::vector::capacity() ?
+size() -> nb éléments dans le tableau et capacity -> nb element pouvant tenir dans l'espace mémoire du tableau.
+
+5. A quoi sert la classe std::stack ?
+D’après la description dans l’en-tête de stack, il s’agit d’une pile LIFO (last-in-first-out).
+
+6. Quelle fonction permet de retirer le dernier élément d’un objet de type std::queue ?
+En parcourant la liste des fonctions sur la page de std::queue, on se rend compte qu’il n’existe pas de fonction permettant de retirer son dernier élément.

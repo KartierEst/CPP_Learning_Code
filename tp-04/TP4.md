@@ -13,6 +13,8 @@ Phone  phone { paul };
 paul.set_position(8);
 ```
 
+On passe par référence avec le &, ce qu'il fait qu'on passe directement par la mémoire. Le _owner sera stocké dans la mémoire en tant que personne, il sera impossible de le changer car il y a const, mais en soit c'est la personne dans la mémoire qui change et pas précisement la personne dans phone.
+
 2. Créez une classe `HomePhone` qui hérite de `Phone`. Ajoutez le nécessaire pour que le code ci-dessous compile.
 ```cpp
 Person paul { "Paul", 3 };
@@ -42,11 +44,15 @@ const Phone& normal_phone = far_phone;
 normal_phone.ring();				// This is the voicemail of Paul. Please leave a message.
 ```
 
+J'ai crée un nouveau constructeur avec 2 parametres et de plus, redefinis avec override la fonction ring dans homephone
+
 5. Le programme a appelé la fonction `HomePhone::ring` sur une référence de type `Phone`.\
 Par quel terme désigne-t-on ce genre d'appel ?
 Comment appelle-t-on les classes sur lesquelles on peut effectuer un appel de ce type ?
 Que faut-il toujours faire lorsqu'on définit ce type de classe et pourquoi ?\
 Si vous n'avez pas pensé à le faire, c'est le moment de vous rattraper.
+
+De la délégation, des classes polymorphes, il faut utiliser virtual et override pour pas avoir des comportements inatendu.
 
 6. Créez une nouvelle classe `MobilePhone`, de manière à pouvoir écrire :
 ```cpp
@@ -72,8 +78,12 @@ const Phone normal_phone = far_phone;
 normal_phone.ring();
 ```
 
+Oui mais ca ne fait pas ce que l'on veut, ca ne metonne pas que ca compile car HomePhone herite Phone donc on peut faire des choses bizarre.
+
 9. En C++, que faut-il faire pour être tout à fait sûr qu'une classe ne puisse plus être instanciée du tout ?\
 Modifiez la déclaration de `Phone::ring` pour que `Phone` ne soit plus instanciable. Comment appelle-t-on ce type de classe ?
+
+Il faut faire des fonctions virtual pure.
 
 10. Pourquoi le code ci-dessous ne compile probablement plus ?
 Effectuez les modifications permettant de réinstancier des objets de type `MobilePhone`, si vous ne l'aviez pas fait à la question précédente.

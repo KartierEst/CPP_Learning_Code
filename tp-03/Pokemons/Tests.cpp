@@ -8,78 +8,76 @@
 #include <string>
 #include <utility>
 
-// TEST_CASE("Pokemons can be constructed with their name")
-// {
-//     Pokemon pikachu { "Pikachu" };
-//     Pokemon bulbizarre { "Bulbizarre" };
+TEST_CASE("Pokemons can be constructed with their name")
+{
+     Pokemon pikachu { "Pikachu" };
+     Pokemon bulbizarre { "Bulbizarre" };
 
-//     REQUIRE(pikachu.name() == "Pikachu");
-//     REQUIRE(bulbizarre.name() == "Bulbizarre");
-// }
+     REQUIRE(pikachu.name() == "Pikachu");
+     REQUIRE(bulbizarre.name() == "Bulbizarre");
+}
 
-// TEST_CASE("Pokeballs are empty by default")
-// {
-//     Pokeball pokeball;
-//     REQUIRE(pokeball.empty() == true);
-// }
+TEST_CASE("Pokeballs are empty by default")
+{
+    Pokeball pokeball;
+    REQUIRE(pokeball.empty() == true);
+}
 
-// TEST_CASE("Pokemons can be stored in Pokeballs")
-// {
-//     auto pikachu = std::make_unique<Pokemon>("Pikachu");
+TEST_CASE("Pokemons can be stored in Pokeballs")
+{
+     auto pikachu = std::make_unique<Pokemon>("Pikachu");
 
-//     Pokeball pokeball;
-//     REQUIRE(pokeball.empty() == true);
+     Pokeball pokeball;
+     REQUIRE(pokeball.empty() == true);
 
-//     pokeball.store(std::move(pikachu));
-//     REQUIRE(pokeball.empty() == false);
+     pokeball.store(std::move(pikachu));
+     REQUIRE(pokeball.empty() == false);
 
-//     auto& pokemon = pokeball.pokemon();
-//     REQUIRE(pokemon.name() == "Pikachu");
-// }
+     auto& pokemon = pokeball.pokemon();
+     REQUIRE(pokemon.name() == "Pikachu");
+}
 
-// TEST_CASE("PCs are constructed with 0 pokemon inside")
-// {
-//     PC pc;
+TEST_CASE("PCs are constructed with 0 pokemon inside")
+{
+    PC pc;
+    const auto& pokemons = pc.pokemons();
+    REQUIRE(pokemons.empty() == true);
+}
 
-//     const auto& pokemons = pc.pokemons();
-//     REQUIRE(pokemons.empty() == true);
-// }
+TEST_CASE("A Pokemon can be put inside the PC")
+{
+    PC pc;
 
-// TEST_CASE("A Pokemon can be put inside the PC")
-// {
-//     PC pc;
+    auto pikachu = std::make_unique<Pokemon>("Pikachu");
+    pc.receive(std::move(pikachu));
 
-//     auto pikachu = std::make_unique<Pokemon>("Pikachu");
-//     pc.receive(std::move(pikachu));
+    const auto& pokemons = pc.pokemons();
+    REQUIRE(pokemons.empty() == false);
+    REQUIRE(pokemons[0]->name() == "Pikachu");
+}
 
-//     const auto& pokemons = pc.pokemons();
-//     REQUIRE(pokemons.empty() == false);
-//     REQUIRE(pokemons[0]->name() == "Pikachu");
-// }
+TEST_CASE("Trainers are constructed with their name and a PC")
+{
+     PC pc;
+     Trainer sacha { "Sacha", pc };
+     Trainer ondine { "Ondine", pc };
+     REQUIRE(sacha.name() == "Sacha");
+     REQUIRE(ondine.name() == "Ondine");
+}
 
-// TEST_CASE("Trainers are constructed with their name and a PC")
-// {
-//     PC      pc;
-//     Trainer sacha { "Sacha", pc };
-//     Trainer ondine { "Ondine", pc };
+//TEST_CASE("Trainers start with 6 empty pokeballs")
+//{
+  //   PC      pc;
+    // Trainer sacha { "Sacha", pc };
 
-//     REQUIRE(sacha.name() == "Sacha");
-//     REQUIRE(ondine.name() == "Ondine");
-// }
+     //const auto& pokeballs = sacha.pokeballs();
+     //REQUIRE(pokeballs.size() == 6u);
 
-// TEST_CASE("Trainers start with 6 empty pokeballs")
-// {
-//     PC      pc;
-//     Trainer sacha { "Sacha", pc };
-
-//     const auto& pokeballs = sacha.pokeballs();
-//     REQUIRE(pokeballs.size() == 6u);
-
-//     for (const auto& pokeball : pokeballs)
-//     {
-//         REQUIRE(pokeball.empty() == true);
-//     }
-// }
+     //for (const auto& pokeball : pokeballs)
+     //{
+       //  REQUIRE(pokeball.empty() == true);
+     //}
+//}
 
 // TEST_CASE("A trainer can catch a pokemon")
 // {
